@@ -1,45 +1,61 @@
-name: "Build Android app"
+name: Generated APK  
+
+
 
 on:
+
   push:
-    branches: [main]    
+    branches:
+      - 'main'
+
+  
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: Install Java
-        uses: actions/setup-java@v2
+      # Set Current Date As Env Variable
+      - name: Set current date as env variable
+        run: echo "date_today=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      # Set Repository Name As Env Variable
+      - name: Set repository name as env variable
+        run: echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v3
         with:
-          java-version: "11"
-          distribution: "adopt"
-          cache: "gradle"
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '17'
+          cache: 'gradle'
 
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
 
-      - name: Setup Node  
-        uses: actions/setup-node@v3
+      # Run Tests Build
+      - name: Run gradle tests
+        run: ./gradlew test
+
+      # Run Build Project
+      - name: Build gradle project
+        run: ./gradlew build
+
+      # Create APK Debug
+      - name: Build apk debug project (APK) - ${{ env.main_project_module }} module
+        run: ./gradlew assembleDebug
+
+      # Create APK Release
+      - name: Build apk release project (APK) - ${{ env.main_project_module }} module
+        run: ./gradlew assemble
+
+      # Upload Artifact Build
+      # Noted For Output [main_project_module]/build/outputs/apk/debug/
+      - name: Upload APK Debug - ${{ env.repository_name }}
+        uses: actions/upload-artifact@v3
         with:
-          node-version: '21'
-
-      - name: Run Yarn Install
-        run: |
-             cd ./packages/app-mobile/
-             npm i -g corepack
-             yarn install             
-      - name: Build application
-        run: |
-             cd ./packages/app-mobile/android
-             ./gradlew assembleDebug             
-      - name: Upload application
-        uses: actions/upload-artifact@v2
-        with:
-          name: app
-          secrets: |
-            "SECRET_CONNEXION=${{ secrets.SECRET_CONNEXION }}"  
-          path: ./packages/app-mobile/android/app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 3
+          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) debug generated
+          path: ${{ env.main_project_module }}/build/outputs/apk/debug/
