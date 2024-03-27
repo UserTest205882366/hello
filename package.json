@@ -1,0 +1,42 @@
+{
+  "name": "reactnativestarter",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "firebase": "^5.0.3",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.2",
+    "react-native": "^0.55.4",
+    "react-native-camera": "^1.1.3",
+    "react-native-swiper": "^1.5.13",
+    "react-native-vector-icons": "^4.6.0",
+    "react-navigation": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.3",
+    "babel-jest": "23.0.0-alpha.0",
+    "babel-preset-react-native": "4.0.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-react": "^7.7.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "flow-bin": "^0.65.0",
+    "jest": "22.4.2",
+    "react-test-renderer": "^16.3.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
